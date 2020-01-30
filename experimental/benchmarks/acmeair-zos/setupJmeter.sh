@@ -29,7 +29,7 @@ cp acmeair-nodejs/document/workload/jmeter/lib/acmeair-driver-1.0-SNAPSHOT.jar  
 
 mv acmeair-nodejs ../
 mv ${JMETER_VERSION}/*  ../Jmeter
-tagfile ../Jmeter/bin/*
+chtag -tc 819 ../Jmeter/bin/*
 popd
 #mkdir ${CURRENT_DIR}/nd/mongo3
 #cp ${CURRENT_DIR}/mongodb.sh ${CURRENT_DIR}/nd/mongo3/

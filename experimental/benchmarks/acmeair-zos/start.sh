@@ -35,7 +35,7 @@ fi
 
 if [ $cleanup ]; then
     rm -rf ./nd
-    exit 1
+    exit 0
 fi
 
 export BASE_NODE=$1
