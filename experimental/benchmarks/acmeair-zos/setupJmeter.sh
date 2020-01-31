@@ -21,11 +21,14 @@ wget http://storage.googleapis.com/google-code-archive-downloads/v2/code.google.
 cp json-simple-1.1.1.jar ${CURRENT_DIR}/nd/Jmeter_setup/${JMETER_VERSION}/lib/ext/
 git clone https://github.com/acmeair/acmeair-nodejs
 cp acmeair-nodejs/document/workload/jmeter/lib/acmeair-driver-1.0-SNAPSHOT.jar  ${CURRENT_DIR}/nd/Jmeter_setup/${JMETER_VERSION}/lib/ext/
-#pushd acmeair-nodejs
+pushd acmeair-nodejs
 #git checkout 009bd063700089a2680b696336d87bd97e412f0e
-#sed -i 's/9080/4000/g' settings.json
-#
-#popd
+if [ -z $ACME_PORT ]; then
+    ACME_PORT=9080
+fi
+sed -i 's/9080/'"$ACME_PORT"'/g' settings.json
+chtag -fc 819 settings.json
+popd
 
 mv acmeair-nodejs ../
 mv ${JMETER_VERSION}/*  ../Jmeter
