@@ -1,4 +1,5 @@
 #!/bin/bash
+#Run on linux
 JMETER_VERSION=apache-jmeter-3.1
 DIR=`dirname $0`
 CURRENT_DIR=`cd $DIR;pwd`
@@ -27,7 +28,7 @@ if [ -z $ACME_PORT ]; then
     ACME_PORT=9080
 fi
 sed -i 's/9080/'"$ACME_PORT"'/g' settings.json
-chtag -fc 819 settings.json
+chtag -tc 819 settings.json
 popd
 
 mv acmeair-nodejs ../
