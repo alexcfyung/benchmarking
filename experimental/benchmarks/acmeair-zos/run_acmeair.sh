@@ -103,19 +103,25 @@ trap on_exit SIGINT SIGQUIT SIGTERM
 
 # define variables
 declare -rx SCRIPT=${0##*/}
+if [ -z $ACME_PORT ]; then
+    ACME_PORT=9080
+fi
+if [ -z $ACME_TIMEOUT]; then
+    ACME_TIMEOUT=1200
+fi
 TEST_NAME=acmeair
 echo -e "\n## TEST: $TEST_NAME ##\n"
 echo -e "## OPTIONS ##\n"
 
 optional RESULTSDIR ${ROOT_DIR}/results
-optional TIMEOUT 1200 
+optional TIMEOUT $ACME_TIMEOUT 
 RESULTSLOG=$TEST_NAME.log
 SUMLOG=score_summary.txt
 
 optional DRIVERHOST
 optional NODE_FILE app.js
 optional CLUSTER_MODE false
-optional PORT 9080 
+optional PORT $ACME_PORT 
 optional DRIVERCMD ${RESOURCE_DIR}/Jmeter/bin/jmeter
 optional DRIVERNO 25
 ACMEAIR_DRIVER_PATH=${SCRIPT_DIR}/jmeter_scripts

@@ -1,5 +1,5 @@
 #!/bin/bash
-CURRENT_DIR=`cd dirname $0;pwd`
+CURRENT_DIR=`cd $(dirname $0);pwd`
 echo "CURRENTDIR: ${CURRENT_DIR}"
 NODE_UNDERTEST=$COMPARE_NODE
 echo "NODE_UNDERTEST: $NODE_UNDERTEST"
