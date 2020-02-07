@@ -79,13 +79,13 @@ baseline_average=`echo "$total/$count"|bc`
 #work out percenntage - throughput = higher is better
 
 percentage=`echo "scale=4;($build_average/$baseline_average)*100"|bc`
-echo "RESULTS:"
-echo "BUILD results:"
-echo ${build_results}
-echo "Average : ${build_average}"
-echo "BASELINE results:"
-echo ${baseline_results}
-echo "Average: ${baseline_average}"
-echo "Percentage of build vs baseline - above 100% is good, less than is bad"
-echo "Percentage : ${percentage}%"
+echo "RESULTS:" | tee -a results
+echo "BUILD results:" | tee -a results
+echo ${build_results}| tee -a results
+echo "Average : ${build_average}"| tee -a results
+echo "BASELINE results:"| tee -a results
+echo ${baseline_results}| tee -a results
+echo "Average: ${baseline_average}"| tee -a results
+echo "Percentage of build vs baseline - above 100% is good, less than is bad"| tee -a results
+echo "Percentage : ${percentage}%"| tee -a results
 

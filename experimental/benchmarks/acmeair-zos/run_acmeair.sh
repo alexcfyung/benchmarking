@@ -69,12 +69,12 @@ function kill_bkg_processes()   # kill processes started in background
 	echo "Killing due to : $@"    
 	#$MONGODB_COMMAND "stop"
     #ps -ef > killps
-        NODE_PID="`ps -ef|grep node|grep -v grep|grep -v slave|awk {'print $2'}`"
+        NODE_PID="`ps -ef|grep \".*acme.*node\"|grep -v grep|grep -v slave|awk {'print $2'}`"
     #echo "NODE_PID: $NODE_PID" >> killps
         kill -9 $NODE_PID || true
     #    pkill node
 	#pkill mongod
-        JAVA_PID="`ps -ef|grep java|grep -v grep|grep -v slave|awk {'print $2'}`"
+        JAVA_PID="`ps -ef|grep \".*acme.*java|grep -v grep|grep -v slave|awk {'print $2'}`"
     #echo "JAVA_PID: $JAVA_PID" >> killps
         kill -9 $JAVA_PID || true
 	pids=$(ps -eo pid,pgid | awk -v pid=$$ '$2==pid && $1!=pid {print $1}')  # get list of all child/grandchild pids - this doesnt seem to work on nodejs benchmark machine....
@@ -103,25 +103,19 @@ trap on_exit SIGINT SIGQUIT SIGTERM
 
 # define variables
 declare -rx SCRIPT=${0##*/}
-if [ -z $ACME_PORT ]; then
-    ACME_PORT=9080
-fi
-if [ -z $ACME_TIMEOUT]; then
-    ACME_TIMEOUT=1200
-fi
 TEST_NAME=acmeair
 echo -e "\n## TEST: $TEST_NAME ##\n"
 echo -e "## OPTIONS ##\n"
 
 optional RESULTSDIR ${ROOT_DIR}/results
-optional TIMEOUT $ACME_TIMEOUT 
+optional TIMEOUT 1200 
 RESULTSLOG=$TEST_NAME.log
 SUMLOG=score_summary.txt
 
 optional DRIVERHOST
 optional NODE_FILE app.js
 optional CLUSTER_MODE false
-optional PORT $ACME_PORT 
+optional PORT 9080 
 optional DRIVERCMD ${RESOURCE_DIR}/Jmeter/bin/jmeter
 optional DRIVERNO 25
 ACMEAIR_DRIVER_PATH=${SCRIPT_DIR}/jmeter_scripts
