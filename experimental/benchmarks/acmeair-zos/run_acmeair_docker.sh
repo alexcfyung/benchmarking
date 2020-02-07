@@ -95,7 +95,7 @@ done
 build_lat_average=`echo "$total/$count"|bc`
 total=0
 count=0
-for result in $baseline_latecy
+for result in $baseline_latency
 do
 total=`echo $total+$result|bc`
 let count=count+1
