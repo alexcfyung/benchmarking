@@ -12,7 +12,7 @@ start)
 rm -rf database
 mkdir database
 rm mongodb.out
-mongod --dbpath database >> mongodb.out 2>&1 &
+mongod ${MONGO_CONF} --dbpath database >> mongodb.out 2>&1 &
 while [ `grep -c "db version " mongodb.out` -lt 1 ]
 do 
 sleep 2
@@ -21,7 +21,7 @@ echo "mongo started at `date`"
 ;;
 stop)
 
-mongod --dbpath database  --shutdown
+mongod ${MONGO_CONF} --dbpath database  --shutdown
 rm -rf database
 ;;
 status)
