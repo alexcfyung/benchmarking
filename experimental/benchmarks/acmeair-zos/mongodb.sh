@@ -12,7 +12,7 @@ start)
 rm -rf database
 mkdir database
 rm mongodb.out
-mongod ${MONGO_CONF} --dbpath database >> mongodb.out 2>&1 &
+BUILD_ID=dontkillme mongod ${MONGO_CONF} --dbpath database >> mongodb.out 2>&1 &
 while [ `grep -c "db version " mongodb.out` -lt 1 ]
 do 
 sleep 2
