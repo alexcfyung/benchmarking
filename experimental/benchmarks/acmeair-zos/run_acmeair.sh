@@ -74,7 +74,7 @@ function kill_bkg_processes()   # kill processes started in background
         kill -9 $NODE_PID || true
     #    pkill node
 	#pkill mongod
-        JAVA_PID="`ps -ef|grep \".*acme.*java|grep -v grep|grep -v slave|awk {'print $2'}`"
+        JAVA_PID="`ps -ef|grep \".*acme.*java\"|grep -v grep|grep -v slave|awk {'print $2'}`"
     #echo "JAVA_PID: $JAVA_PID" >> killps
         kill -9 $JAVA_PID || true
 	pids=$(ps -eo pid,pgid | awk -v pid=$$ '$2==pid && $1!=pid {print $1}')  # get list of all child/grandchild pids - this doesnt seem to work on nodejs benchmark machine....
