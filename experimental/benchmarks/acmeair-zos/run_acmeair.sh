@@ -246,8 +246,8 @@ sleep 10 # give server some time to start up
 
 
 
-#echo "${SCRIPT_DIR}/loaddb.sh localhost ${PORT}"
-#${SCRIPT_DIR}/loaddb.sh localhost ${PORT}
+echo "${SCRIPT_DIR}/loaddb.sh localhost ${PORT}"
+${SCRIPT_DIR}/loaddb.sh localhost ${PORT}
 
 sleep 5
 pre=`getFootprint`
