@@ -123,6 +123,6 @@ echo "Average : ${build_lat_average}"| tee -a results
 echo "BASELINE results:"| tee -a results
 echo ${baseline_latency}| tee -a results
 echo "Average: ${baseline_lat_average}"| tee -a results
-echo "Percentage of build vs baseline - above 100% is good, less than is bad"| tee -a results
+echo "Percentage of build vs baseline - less than 100% is good, more than is bad"| tee -a results
 echo "Percentage : ${percentage_lat}%"| tee -a results
 
