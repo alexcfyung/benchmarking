@@ -7,7 +7,7 @@ echo $DIR
 echo $CURRENT_DIR
 mkdir ${CURRENT_DIR}/nd/Jmeter_setup
 pushd ${CURRENT_DIR}/nd/Jmeter_setup
-cp ${HOME}/${JMETER_VERSION}.tgz ./
+cp ${JMETER_PATH}/${JMETER_VERSION}.tgz ./
 gunzip ${JMETER_VERSION}.tgz
 tar -xf ${JMETER_VERSION}.tar
 
