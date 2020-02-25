@@ -26,7 +26,7 @@ npm install
 popd
 #Driver command for Jmeter
 DRIVERCMD=${CURRENT_DIR}/nd/Jmeter/bin/jmeter
-LOGS="${CURRENT_DIR}/nd/results/`date +%Y%m%d-%H%M%S`/"
+LOGS="${CURRENT_DIR}/nd/results/`date +%Y%m%d-%H%M%S`"
 mkdir -p $LOGS
 for i in {1..3}
 do
