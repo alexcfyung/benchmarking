@@ -9,7 +9,7 @@ mkdir ${CURRENT_DIR}/nd/Jmeter_setup
 pushd ${CURRENT_DIR}/nd/Jmeter_setup
 cp ${JMETER_PATH}/${JMETER_VERSION}.tgz ./
 gunzip ${JMETER_VERSION}.tgz
-tar -xf ${JMETER_VERSION}.tar
+tar -xfUXo ${JMETER_VERSION}.tar
 
 git clone https://github.com/acmeair/acmeair-nodejs
 pushd acmeair-nodejs
