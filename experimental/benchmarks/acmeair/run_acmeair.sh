@@ -9,12 +9,12 @@ ROOT_DIR=`cd "${REL_DIR}/.."; pwd`
 echo "ROOT_DIR=${ROOT_DIR}"
 SCRIPT_DIR=${ROOT_DIR}/acmeair
 ACMEAIR_DIR=${RESOURCE_DIR}/acmeair-nodejs
-MONGO_DIR=${RESOURCE_DIR}/mongo3
+#MONGO_DIR=${RESOURCE_DIR}/mongo3
 
 #these may need changing when we find out more about the machine we're running on
-NODE_AFFINITY="numactl --physcpubind=0,4"
-MONGO_AFFINITY="numactl --physcpubind=1,5"
-JMETER_AFFINITY="numactl --physcpubind=2,6"
+#NODE_AFFINITY="numactl --physcpubind=0,4"
+#MONGO_AFFINITY="numactl --physcpubind=1,5"
+#JMETER_AFFINITY="numactl --physcpubind=2,6"
 
 function usage() {
 	echo "USAGE:"
@@ -60,13 +60,16 @@ function archive_files() {
 
 function kill_bkg_processes()   # kill processes started in background
 {
-	echo "Killing due to : $@"    
-	$MONGODB_COMMAND "stop"
+	echo "Killing due to : $@"   
+    ps -ef > killps
+#	$MONGODB_COMMAND "stop"
         pkill node
-	pkill mongod
-        JAVA_PID="`ps -ef|grep java|grep -v grep|grep -v slave|awk {'print $2'}`"
+#	pkill mongod
+        JAVA_PID="`ps -ef|grep "acmeair.*java"|grep -v grep|grep -v slave|awk {'print $2'}`"
+    echo "JAVA_PID: $JAVA_PID" >> killps
         kill -9 $JAVA_PID || true
 	pids=$(ps -eo pid,pgid | awk -v pid=$$ '$2==pid && $1!=pid {print $1}')  # get list of all child/grandchild pids - this doesnt seem to work on nodejs benchmark machine....
+    echo "pids: $pids" >> killps
 	echo "Killing background processes"
 	echo $pids
 	kill -9 $OTHERPID_LIST $pids || true  # avoid failing if there is nothing to kill
@@ -185,7 +188,8 @@ LOOKFORDONE_PID=$!
 TIMEOUT_PID=$!
 TIMEOUT_CHILD=`pgrep -P $TIMEOUT_PID`
 export OTHERPID_LIST="$OTHERPID_LIST $TIMEOUT_CHILD $TIMEOUT_PID $LOOKFORDONE_PID"
-
+PRODUCT="product"
+DATE="date"
 LOGDIR_PREFIX=$PRODUCT/$DATE/$CUR_DATE
 SUMFILE=$LOGDIR_TEMP/$LOGDIR_PREFIX/$SUMLOG
 STDOUT_SERVER=$LOGDIR_TEMP/$LOGDIR_PREFIX/server.out
@@ -207,12 +211,12 @@ rm -f $LOGFILE
 OUT_LIST="$OUT_LIST $LOGDIR_SHORT/$RESULTSLOG"
 echo "*** LOGFILE  $LOGFILE ***"
 
-# Start MongoDB
-MONGODB_COMMAND="${MONGO_DIR}/mongodb.sh"
-echo -e "\n## STARTING MONGODB ##" 2>&1 | tee -a $LOGFILE
-echo -e " $MONGODB_COMMANDi start" | tee -a $LOGFILE
-$MONGO_AFFINITY $MONGODB_COMMAND start
-sleep 5     # give it a chance to start up
+## Start MongoDB
+#MONGODB_COMMAND="${MONGO_DIR}/mongodb.sh"
+#echo -e "\n## STARTING MONGODB ##" 2>&1 | tee -a $LOGFILE
+#echo -e " $MONGODB_COMMANDi start" | tee -a $LOGFILE
+#$MONGO_AFFINITY $MONGODB_COMMAND start
+#sleep 5     # give it a chance to start up
 
 # Start the server(s)
 echo -e "\n## SERVER COMMAND ##" 2>&1 | tee -a $LOGFILE
