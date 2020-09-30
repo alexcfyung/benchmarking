@@ -38,6 +38,7 @@ if [ $cleanup ]; then
     exit 0
 fi
 
+export COLUMNS=1024
 export BASE_NODE=$1
 export COMPARE_NODE=$2
 ./run_acmeair_docker.sh
