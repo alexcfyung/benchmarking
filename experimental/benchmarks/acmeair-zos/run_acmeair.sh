@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #shopt -s -o nounset
 
 function currentsec() {
@@ -68,19 +68,20 @@ function kill_bkg_processes()   # kill processes started in background
 {
 	echo "Killing due to : $@"    
 	#$MONGODB_COMMAND "stop"
-#    ps -ef > killps
-        NODE_PID="`ps -ef|grep \".*acme.*node app.js\"|grep -v grep|grep -v slave|awk {'print $2'}`"
-#    echo "NODE_PID: $NODE_PID" >> killps
-        kill -9 $NODE_PID || true
+    ps -ef >> killps
+        NODE_PID="`ps -ef|grep \"node app.js\"|grep -v grep|grep -v slave|awk {'print $2'}`"
+    echo "NODE_PID: $NODE_PID" >> killps
+        /bin/kill -9 $NODE_PID || true
     #    pkill node
 	#pkill mongod
         JAVA_PID="`ps -ef|grep \".*acme.*java\"|grep -v grep|grep -v slave|awk {'print $2'}`"
-#    echo "JAVA_PID: $JAVA_PID" >> killps
-        kill -9 $JAVA_PID || true
+    echo "JAVA_PID: $JAVA_PID" >> killps
+        /bin/kill -9 $JAVA_PID || true
 	pids=$(ps -eo pid,pgid | awk -v pid=$$ '$2==pid && $1!=pid {print $1}')  # get list of all child/grandchild pids - this doesnt seem to work on nodejs benchmark machine....
 	echo "Killing background processes"
-	echo $pids
-	kill -9 $OTHERPID_LIST $pids || true  # avoid failing if there is nothing to kill
+	echo "pid: $pids" >> killps
+	echo "otherpid: $OTHERPID_LIST" >> killps
+	/bin/kill -9 $OTHERPID_LIST $pids || true  # avoid failing if there is nothing to kill
 }
 
 function on_exit()
@@ -194,11 +195,14 @@ echo -n > $DONEFILE_TEMP
 done
 )&
 LOOKFORDONE_PID=$!
+echo "LOOKFORDONE pid: $LOOKFORDONE_PID"
 # start time clock
 ( sleep $TIMEOUT; echo "TIMEOUT (${TIMEOUT}s)"; echo "fail" >> $DONEFILE_TEMP; ) &
 TIMEOUT_PID=$!
+echo "TIMEOUT_PID pid: $TIMEOUT_PID"
 #TIMEOUT_CHILD=`pgrep -P $TIMEOUT_PID`
 TIMEOUT_CHILD=`ps -eo pid,ppid | awk -v ppid=$TIMEOUT_PID '$2==ppid && $1!=ppid {print $1}'`
+echo "TIMEOUT_CHILD pid: $TIMEOUT_CHILD"
 export OTHERPID_LIST="$OTHERPID_LIST $TIMEOUT_CHILD $TIMEOUT_PID $LOOKFORDONE_PID"
 PRODUCT="product"
 DATE="date" 
@@ -255,6 +259,8 @@ echo -n "Pre run Footprint in kb : $pre"
 # Start the driver(s)
 echo -e "\n## DRIVER COMMAND ##" 2>&1 | tee -a $LOGFILE
 echo -e "$DRIVER_COMMAND"|tee -a $LOGFILE
+echo "JAVA_HOME: $JAVA_HOME"
+type -p java
 echo "LOGFILE: $LOGFILE"
 (
     if (exec $DRIVER_COMMAND > jmeter.log 2>&1 ) ; then
@@ -306,11 +312,19 @@ do
 done
 
 chtag -tc 819 $JMETER_LOGFILE $STDOUT_SERVER
+echo "JMETER_LOGFILE: $JMETER_LOGFILE"
+ls -alT $JMETER_LOGFILE
 # print output
 echo -e "\n##BEGIN $TEST_NAME OUTPUT $(date)\n" 2>&1 | tee -a $SUMFILE
 echo metric throughput $(cat $JMETER_LOGFILE | awk -f ${SCRIPT_DIR}/acmeair_score.awk) 2>&1 | tee -a $SUMFILE
 echo metric latency $(cat $JMETER_LOGFILE | awk -f ${SCRIPT_DIR}/acmeair_latency.awk) 2>&1 | tee -a $SUMFILE
-mv $JMETER_LOGFILE $LOGDIR_TEMP/$LOGDIR_PREFIX
+echo "LOGDIR_PREFIX: $LOGDIR_TEMP/$LOGDIR_PREFIX"
+ls -alT $LOGDIR_TEMP/$LOGDIR_PREFIX
+cp -r $LOGDIR_TEMP/$LOGDIR_PREFIX ${SCRIPT_DIR}/test
+#work around for POK
+#mv $JMETER_LOGFILE $LOGDIR_TEMP/$LOGDIR_PREFIX/
+rm $JMETER_LOGFILE
+rm $STDOUT_SERVER
 export OUT_LIST="$OUT_LIST $LOGDIR_PREFIX/jmeter.log"
 echo "metric pre footprint $pre"
 echo "metric post footprint $post"
