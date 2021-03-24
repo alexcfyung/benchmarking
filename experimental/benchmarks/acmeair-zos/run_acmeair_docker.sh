@@ -18,12 +18,12 @@ ${NODE_BASELINE}/node -e "console.log(process.versions)"
 build_fail=0
 baseline_fail=0
 CURRENT_PATH=${PATH}
-echo "using baseline to do npm install."
-pushd ${CURRENT_DIR}/nd/acmeair-nodejs
-export PATH=${NODE_BASELINE}:${CURRENT_PATH}
-
-npm install
-popd
+#echo "using baseline to do npm install."
+#pushd ${CURRENT_DIR}/nd/acmeair-nodejs
+#export PATH=${NODE_BASELINE}:${CURRENT_PATH}
+#
+#npm install
+#popd
 #Driver command for Jmeter
 DRIVERCMD=${CURRENT_DIR}/nd/Jmeter/bin/jmeter
 LOGS="${CURRENT_DIR}/nd/results/`date +%Y%m%d-%H%M%S`"

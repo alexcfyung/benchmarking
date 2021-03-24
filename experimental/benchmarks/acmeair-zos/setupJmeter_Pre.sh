@@ -22,7 +22,7 @@ chtag -tc 819 settings.json
 popd
 
 mv acmeair-nodejs ../
-mv ${JMETER_VERSION}/*  ../Jmeter
+mv ${JMETER_VERSION} ../Jmeter
 chtag -tc 819 ../Jmeter/bin/*
 popd
 #mkdir ${CURRENT_DIR}/nd/mongo3
